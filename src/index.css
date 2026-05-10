@@ -540,9 +540,21 @@ body {
 }
 
 .hero-numbers {
-  padding: 20px 22px 18px;
-  border-bottom: 1px solid var(--line);
-  background: linear-gradient(180deg, #fcfcfd 0%, #fff 100%);
+  padding: 22px 22px 20px;
+  border-bottom: 1px solid var(--ink);
+  background: var(--ink);
+}
+.hero-numbers .hero-stat .label {
+  color: var(--muted-2);
+}
+.hero-numbers .hero-stat .value {
+  color: #fff;
+}
+.hero-numbers .hero-stat .value .cur {
+  color: var(--muted-2);
+}
+.hero-numbers .hero-stat .sub {
+  color: var(--muted-2);
 }
 .hero-row {
   display: grid;

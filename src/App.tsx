@@ -27,7 +27,6 @@ function App() {
       </header>
 
       <div className="title-block">
-        <div className="eyebrow">Affordability · v2</div>
         <h1>Model the all-in cost of your next home.</h1>
         <p>
           Combine equity, cash, and a real-time tax lookup to see your monthly
