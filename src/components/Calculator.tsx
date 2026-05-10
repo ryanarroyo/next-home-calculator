@@ -1,11 +1,13 @@
 import { useMemo } from "react";
 import { calculate, formatUSD } from "../lib/calculator";
+import type { ScenarioInputs } from "../lib/savedScenarios";
 import { usePersistedState } from "../lib/usePersistedState";
 import { Field } from "./Field";
 import { LocationLookup } from "./LocationLookup";
 import { MoneyInput } from "./MoneyInput";
 import { PercentInput } from "./PercentInput";
 import { ResultsPanel } from "./ResultsPanel";
+import { ScenariosMenu } from "./ScenariosMenu";
 import { StatStrip } from "./StatStrip";
 
 const TERMS = [15, 20, 30] as const;
@@ -25,6 +27,45 @@ export function Calculator() {
   const [hoa, setHoa] = usePersistedState("cc.hoa", 0);
   const [landscaping, setLandscaping] = usePersistedState("cc.landscaping", 0);
   const [cleaning, setCleaning] = usePersistedState("cc.cleaning", 0);
+
+  const snapshot: ScenarioInputs = {
+    homeEquity,
+    nextPrice,
+    cashDown,
+    mortgageRate,
+    loanTerm,
+    taxRate,
+    insRate,
+    location,
+    resolvedLoc,
+    electricity,
+    gas,
+    hoa,
+    landscaping,
+    cleaning,
+  };
+
+  const loadScenario = (s: ScenarioInputs) => {
+    setHomeEquity(s.homeEquity);
+    setNextPrice(s.nextPrice);
+    setCashDown(s.cashDown);
+    setMortgageRate(s.mortgageRate);
+    setLoanTerm(s.loanTerm);
+    setTaxRate(s.taxRate);
+    setInsRate(s.insRate);
+    setLocation(s.location);
+    setResolvedLoc(s.resolvedLoc);
+    setElectricity(s.electricity);
+    setGas(s.gas);
+    setHoa(s.hoa);
+    setLandscaping(s.landscaping);
+    setCleaning(s.cleaning);
+  };
+
+  const defaultName = `${new Date().toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  })} · $${formatUSD(nextPrice)} · ${mortgageRate}% · ${loanTerm}Y`;
 
   const results = useMemo(
     () =>
@@ -60,6 +101,14 @@ export function Calculator() {
 
   return (
     <>
+      <div className="scn-bar">
+        <ScenariosMenu
+          current={snapshot}
+          defaultName={defaultName}
+          onLoad={loadScenario}
+        />
+      </div>
+
       <StatStrip
         results={results}
         loanTermYears={loanTerm}
@@ -87,28 +136,6 @@ export function Calculator() {
                 onChange={setCashDown}
                 max={10_000_000}
               />
-              <div className="input-aside">
-                <span>Quick set:</span>
-                <span
-                  className="chip"
-                  onClick={() =>
-                    setCashDown(
-                      Math.max(0, Math.round(nextPrice * 0.2 - homeEquity))
-                    )
-                  }
-                >
-                  20% total
-                </span>
-                <span className="chip" onClick={() => setCashDown(0)}>
-                  $0
-                </span>
-                <span className="chip" onClick={() => setCashDown(50_000)}>
-                  $50k
-                </span>
-                <span className="chip" onClick={() => setCashDown(100_000)}>
-                  $100k
-                </span>
-              </div>
             </Field>
 
             <Field name="Next home price" hint="purchase price">
