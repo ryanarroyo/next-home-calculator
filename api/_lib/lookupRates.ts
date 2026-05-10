@@ -106,9 +106,15 @@ export async function lookupRates(
       throw new LookupError("Rate limited — try again shortly.", 429);
     }
     if (e instanceof Anthropic.APIError) {
-      throw new LookupError(`Upstream error: ${e.message}`, 502);
+      console.error("[lookup-rates] Anthropic APIError:", {
+        status: e.status,
+        message: e.message,
+      });
+      throw new LookupError(`Upstream ${e.status ?? ""}: ${e.message}`, 502);
     }
-    throw new LookupError("Lookup failed.", 500);
+    console.error("[lookup-rates] Unexpected error:", e);
+    const detail = e instanceof Error ? e.message : String(e);
+    throw new LookupError(`Lookup failed: ${detail}`, 500);
   }
 
   const text = response.content

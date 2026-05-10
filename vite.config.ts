@@ -73,6 +73,9 @@ function apiPlugin(env: Record<string, string>): Plugin {
             const status = e instanceof LookupError ? e.status : 500;
             const message =
               e instanceof Error ? e.message : "Lookup failed.";
+            if (!(e instanceof LookupError)) {
+              console.error("[/api/lookup-rates] Unhandled:", e);
+            }
             res.statusCode = status;
             res.setHeader("Content-Type", "application/json");
             res.end(JSON.stringify({ error: message }));
