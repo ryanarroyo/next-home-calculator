@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { lookupRates, LookupError } from "./_lib/lookupRates";
+import { lookupRates, LookupError } from "./_lib/lookupRates.js";
 
 export default async function handler(
   req: VercelRequest,
